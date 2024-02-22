@@ -1,1 +1,1 @@
-# Sample00
+# This is the very first sample in Nhap mon phat trien game
