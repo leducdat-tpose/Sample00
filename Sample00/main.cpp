@@ -48,9 +48,9 @@ HWND hWnd = 0;
 // Each color is from 0.0f to 1.0f  ( 0/255 to 255/255 ) 
 #define BACKGROUND_COLOR D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.2f)
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
-
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+//MAX_FRAME_RATE is render's speed
 #define MAX_FRAME_RATE 100
 
 ID3D10Device* pD3DDevice = NULL;
@@ -60,11 +60,12 @@ ID3D10RenderTargetView* pRenderTargetView = NULL;
 int BackBufferWidth = 0;
 int BackBufferHeight = 0;
 
-#define TEXTURE_PATH_BRICK L"brick.png"
+#define TEXTURE_PATH_BRICK L"sampleBall.png"
 #define BRICK_START_X 8.0f
 #define BRICK_START_Y 200.0f
 
 #define BRICK_START_VX 0.2f
+#define BRICK_START_VY 0.5f
 
 #define BRICK_WIDTH 16.0f
 #define BRICK_HEIGHT 16.0f
@@ -78,6 +79,7 @@ D3DX10_SPRITE spriteBrick;
 float brick_x = BRICK_START_X;
 float brick_vx = BRICK_START_VX;
 float brick_y = BRICK_START_Y;
+float brick_vy = BRICK_START_VY;
 
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -340,19 +342,25 @@ void LoadResources()
 
 	IMPORTANT: no render-related code should be used inside this function.
 */
-void Update(DWORD dt)
+void Update(DWORD dt)// dt approximetily aslo 1 mili second
 {
 	//Uncomment the whole function to see the brick moves and bounces back when hitting left and right edges
 	//brick_x++;
 
-	brick_x += brick_vx*dt; 
+	brick_x += brick_vx*dt;
+	brick_y += brick_vy * dt;
 
 	// NOTE: BackBufferWidth is indeed related to rendering!!
+	// BackBufferWidth is the width of limited for brick
+	// BackBufferHeight similiar to BackBufferWidth but for the height
 	float right_edge = BackBufferWidth - BRICK_WIDTH;
+	float bottom_edge = BackBufferHeight - BRICK_HEIGHT;
 
-	if (brick_x < 0 || brick_x > right_edge) {
+	if (brick_y < 0 || brick_y > bottom_edge) {
 
-		brick_vx = -brick_vx;
+		
+		brick_vy = -brick_vy;
+		
 
 		//	//Why not having these logics would make the brick disappear sometimes?  
 		////	if (brick_x < 0)
@@ -363,6 +371,10 @@ void Update(DWORD dt)
 		////	{
 		////		brick_x = right_edge;
 		////	}
+	}
+	if (brick_x < 0 || brick_x > right_edge)
+	{
+		brick_vx -= brick_vx;
 	}
 }
 
@@ -535,3 +547,4 @@ int WINAPI WinMain(
 
 	return 0;
 }
+//Render() will draw frame for player to see
