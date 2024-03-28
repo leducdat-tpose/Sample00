@@ -34,6 +34,17 @@ public:
 	CBrick(float x, float y, LPTEXTURE texture): CGameObject(x,y,texture) {}
 	void Update(DWORD dt) {}; 
 };
+class CBrickMove : public CGameObject {
+	float vx;
+	float vy;
+public:
+	CBrickMove(float x, float y, float vx, float vy, LPTEXTURE texture) : CGameObject(x, y, texture)
+	{
+		this->vx = vx;
+		this->vy = vy;
+	};
+	void Update(DWORD dt);
+};
 
 class CMario : public CGameObject
 {
